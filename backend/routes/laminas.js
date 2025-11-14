@@ -21,19 +21,28 @@ router.post('/', (req, res) => {
   });
 });
 
-// Obtener todas las láminas
+// ✅ Obtener todas las láminas con el nombre del tipo
 router.get('/', (req, res) => {
-  const query = 'SELECT * FROM laminas';
+  const query = `
+    SELECT l.id, l.largo, l.ancho, t.tipo_lamina AS tipo
+    FROM laminas l
+    INNER JOIN tipo_lamina t ON l.id_tipo = t.id
+  `;
   connection.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: 'Error al obtener las láminas.' });
     res.status(200).json(results);
   });
 });
 
-// Obtener una lámina por ID
+// Obtener una lámina por ID (con tipo)
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  const query = 'SELECT * FROM laminas WHERE id = ?';
+  const query = `
+    SELECT l.id, l.largo, l.ancho, t.tipo_lamina AS tipo
+    FROM laminas l
+    INNER JOIN tipo_lamina t ON l.id_tipo = t.id
+    WHERE l.id = ?
+  `;
   connection.query(query, [id], (err, results) => {
     if (err) return res.status(500).json({ error: 'Error al obtener la lámina.' });
     if (results.length === 0) return res.status(404).json({ message: 'Lámina no encontrada.' });

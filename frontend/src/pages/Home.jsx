@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,7 +10,6 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Route } from "react-router-dom";
 
 ChartJS.register(
   BarElement,
@@ -22,6 +22,8 @@ ChartJS.register(
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
   // Datos para gráfico de barras
   const barData = {
     labels: ["Máquina 1", "Máquina 2", "Máquina 3", "Máquina 4"],
@@ -56,8 +58,6 @@ export default function Home() {
     responsive: true,
   };
 
-  
-
   return (
     <div className="max-w-7xl mx-auto p-5 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -68,26 +68,41 @@ export default function Home() {
 
       {/* Cards resumen */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
-        <button className="bg-white p-5 rounded-xl shadow text-center">
+        <button
+          onClick={() => navigate("/laminas")}
+          className="bg-white p-5 rounded-xl shadow text-center hover:bg-cyan-50 hover:scale-105 transition transform"
+        >
           <div className="text-4xl mb-2">📚</div>
           <p className="text-2xl font-bold">300</p>
-          <span>Láminas</span>
+          <span className="text-lg font-medium">Láminas</span>
         </button>
-        <div className="bg-white p-5 rounded-xl shadow text-center">
+
+        <button
+          onClick={() => navigate("/cortes")}
+          className="bg-white p-5 rounded-xl shadow text-center hover:bg-cyan-50 hover:scale-105 transition transform"
+        >
           <div className="text-4xl mb-2">✂️</div>
           <p className="text-2xl font-bold">58</p>
-          <span>Cortes</span>
-        </div>
-        <div className="bg-white p-5 rounded-xl shadow text-center">
+          <span className="text-lg font-medium">Cortes</span>
+        </button>
+
+        <button
+          onClick={() => navigate("/retazos")}
+          className="bg-white p-5 rounded-xl shadow text-center hover:bg-cyan-50 hover:scale-105 transition transform"
+        >
           <div className="text-4xl mb-2">⛏️</div>
           <p className="text-2xl font-bold">120</p>
-          <span>Retazos</span>
-        </div>
-        <div className="bg-white p-5 rounded-xl shadow text-center">
+          <span className="text-lg font-medium">Retazos</span>
+        </button>
+
+        <button
+          onClick={() => navigate("/alertas")}
+          className="bg-white p-5 rounded-xl shadow text-center hover:bg-red-50 hover:scale-105 transition transform"
+        >
           <div className="text-4xl mb-2">⚠️</div>
           <p className="text-2xl font-bold">12</p>
-          <span>Alertas</span>
-        </div>
+          <span className="text-lg font-medium text-red-600">Alertas</span>
+        </button>
       </div>
 
       {/* Charts */}

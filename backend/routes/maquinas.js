@@ -56,7 +56,7 @@ router.put('/:id', (req, res) => {
 });
 
 // Eliminar tipo de maquina
-router.delete('/:id_maquina', (req, res) => {
+router.delete('/:id', (req, res) => {
   const id = req.params.id;
   const query = 'DELETE FROM maquinas WHERE id_maquina = ?';
   connection.query(query, [id], (err, results) => {

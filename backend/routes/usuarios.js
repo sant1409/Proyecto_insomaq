@@ -47,6 +47,8 @@ router.post('/registrarse', async (req, res) => {
     }
 });
 
+
+
 // Iniciar sesión
 router.post('/iniciar_sesion', (req, res) => {
     const { email, contraseña } = req.body;
@@ -63,6 +65,56 @@ router.post('/iniciar_sesion', (req, res) => {
         res.json({ message: `Login exitoso. Bienvenido ${user.nombre}`, token });
     });
 });
+
+   // 🔐 Recuperar clave - Paso 1: Solicitar correo
+router.post("/recuperar_clave", (req, res) => {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ message: "El correo es requerido" });
+
+    connection.query("SELECT * FROM usuarios WHERE email = ?", [email], (err, results) => {
+        if (err) return res.status(500).json({ message: "Error al buscar el usuario" });
+        if (results.length === 0) return res.status(404).json({ message: "Usuario no encontrado" });
+
+        // Aquí puedes enviar un correo con un token de recuperación si quieres seguridad extra
+        res.json({ message: "Usuario encontrado. Ahora puede cambiar su clave." });
+    });
+});
+
+// 🔐 Recuperar clave - Paso 2: Cambiar clave
+router.post("/cambiar_clave", async (req, res) => {
+    const { email, nueva_clave } = req.body;
+
+    if (!email || !nueva_clave) {
+        return res.status(400).json({ message: "Faltan datos requeridos" });
+    }
+
+    // Verificar si el usuario existe
+    connection.query("SELECT * FROM usuarios WHERE email = ?", [email], async (err, results) => {
+        if (err) return res.status(500).json({ message: "Error al buscar el usuario" });
+        if (results.length === 0) return res.status(404).json({ message: "Usuario no encontrado" });
+
+        try {
+            // Encriptar la nueva clave
+            const hashed = await bcrypt.hash(nueva_clave, 10);
+
+            // Actualizar clave en la base de datos
+            connection.query(
+                "UPDATE usuarios SET contraseña = ? WHERE email = ?",
+                [hashed, email],
+                (err, updateResults) => {
+                    if (err) return res.status(500).json({ message: "Error al actualizar la clave" });
+
+                    res.json({ message: "✅ Clave actualizada correctamente" });
+                }
+            );
+        } catch (hashErr) {
+            console.error(hashErr);
+            res.status(500).json({ message: "Error al encriptar la clave" });
+        }
+    });
+});
+
 
 // Obtener todos los usuarios
 router.get('/', authenticateToken, (req, res) => {
