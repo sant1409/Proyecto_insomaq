@@ -59,7 +59,7 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-5 bg-gray-50 min-h-screen">
+    <div className="max-w-full p-5 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-5">
         <h1 className="text-3xl font-bold">Gestión de Inventario de Láminas</h1>
@@ -145,7 +145,7 @@ export default function Home() {
               </tr>
             </tbody>
           </table>
-        </div>
+        </div>  
 
         <div className="bg-white p-5 rounded-xl shadow">
           <h2 className="text-xl font-semibold mb-3">Alertas</h2>
